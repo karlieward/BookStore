@@ -6,8 +6,14 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/Books': 'http://localhost:4000',
-      '/swagger': 'http://localhost:4000',
+      '/Books': {
+        target: 'http://localhost:5003',
+        changeOrigin: true,
+      },
+      '/swagger': {
+        target: 'http://localhost:5003',
+        changeOrigin: true,
+      },
     },
   },
 })

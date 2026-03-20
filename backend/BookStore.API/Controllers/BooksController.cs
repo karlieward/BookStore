@@ -16,14 +16,24 @@ public class BooksController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetBooks([FromQuery] int pageSize = 10, [FromQuery] int pageNum = 1)
+    public IActionResult GetBooks(
+        [FromQuery] int pageSize = 5,
+        [FromQuery] int pageNum = 1,
+        [FromQuery] string? sortOrder = null)
     {
+        sortOrder ??= Request.Query["sortOrder"].FirstOrDefault() ?? "asc";
         var totalNumBooks = _context.Books.Count();
-        var books = _context.Books
-            .OrderBy(b => b.Title)
-            .Skip((pageNum - 1) * pageSize)
-            .Take(pageSize)
-            .ToList();
+        var isDesc = string.Equals(sortOrder, "desc", StringComparison.OrdinalIgnoreCase);
+
+        var books = isDesc
+            ? _context.Books.OrderByDescending(b => b.Title)
+                .Skip((pageNum - 1) * pageSize)
+                .Take(pageSize)
+                .ToList()
+            : _context.Books.OrderBy(b => b.Title)
+                .Skip((pageNum - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
         return Ok(new { books, totalNumBooks });
     }
