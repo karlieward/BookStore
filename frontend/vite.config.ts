@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
+    // Forward API requests to backend to avoid CORS
     proxy: {
       '/Books': {
         target: 'http://localhost:5003',

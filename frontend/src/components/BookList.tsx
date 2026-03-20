@@ -3,6 +3,7 @@ import type { Book } from '../types/Book';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
+/** API response shape from /Books endpoint */
 interface BooksResponse {
   books: Book[];
   totalNumBooks: number;
@@ -15,6 +16,7 @@ function BookList() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [totalPages, setTotalPages] = useState(0);
 
+  // Refetch when pagination or sort changes
   useEffect(() => {
     const fetchBooks = async () => {
       try {
@@ -25,7 +27,7 @@ function BookList() {
           sortOrder,
         });
         const res = await fetch(`${base}/Books?${params}`, {
-          cache: 'no-store',
+          cache: 'no-store', // Prevent cached responses when changing sort
         });
         const data: BooksResponse = await res.json();
         setBooks(data.books);
@@ -39,12 +41,12 @@ function BookList() {
 
   const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setPageSize(Number(e.target.value));
-    setPageNum(1);
+    setPageNum(1); // Reset to first page when changing results per page
   };
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortOrder(e.target.value as 'asc' | 'desc');
-    setPageNum(1);
+    setPageNum(1); // Reset to first page when changing sort order
   };
 
   return (
@@ -124,6 +126,7 @@ function BookList() {
         ))}
       </div>
 
+      {/* Dynamic pagination: one button per page */}
       {totalPages > 1 && (
         <nav className="mt-4 d-flex justify-content-center">
           <ul className="pagination mb-0">

@@ -1,3 +1,4 @@
+/** Matches backend Book model. Uses camelCase to align with .NET JSON serialization. */
 export interface Book {
   bookId: number;
   title: string;

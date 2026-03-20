@@ -2,6 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BookStore.API.Data;
 
+/// <summary>
+/// Book entity matching the Books table in Bookstore.sqlite. All fields required.
+/// </summary>
 public class Book
 {
     [Key]
