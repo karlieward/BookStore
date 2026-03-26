@@ -7,12 +7,12 @@ export default defineConfig({
   server: {
     // Forward API requests to backend to avoid CORS
     proxy: {
-      '/Books': {
-        target: 'http://localhost:5003',
+      '/api': {
+        target: 'http://localhost:4000',
         changeOrigin: true,
       },
       '/swagger': {
-        target: 'http://localhost:5003',
+        target: 'http://localhost:4000',
         changeOrigin: true,
       },
     },
