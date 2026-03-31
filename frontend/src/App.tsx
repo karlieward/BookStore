@@ -4,6 +4,7 @@ import './App.css';
 import BooksPage from './pages/BooksPage';
 import CartPage from './pages/CartPage';
 import BookDetailsPage from './pages/BookDetailsPage';
+import AdminBooksPage from './pages/AdminBooksPage';
 import { useCart } from './state/CartContext';
 
 function App() {
@@ -18,6 +19,9 @@ function App() {
             Bookstore
           </Link>
           <div className="ms-auto d-flex gap-2">
+            <Link className="btn btn-outline-light btn-sm" to="/adminbooks">
+              Admin
+            </Link>
             <Link className="btn btn-outline-light btn-sm" to="/cart">
               Cart ({totalQuantity})
             </Link>
@@ -29,6 +33,7 @@ function App() {
         <Route path="/" element={<BooksPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/details/:bookId" element={<BookDetailsPage />} />
+        <Route path="/adminbooks" element={<AdminBooksPage />} />
       </Routes>
     </BrowserRouter>
   );
