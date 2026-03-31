@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Book } from '../types/Book';
+import type { Book } from '../types/Book';
 import { deleteBook, fetchBooks } from '../api/booksApi';
 import NewBookForm from '../components/NewBookForm';
 import EditBookForm from '../components/EditBookForm';
@@ -44,21 +44,25 @@ const AdminBooksPage = () => {
     }
   };
 
-  if (loading) return <p>Loading books...</p>;
-  if (error) return <p className="text-red-500">Error: {error}</p>;
+  if (loading) return <p className="container py-4">Loading books...</p>;
+  if (error) return <p className="container py-4 text-danger">Error: {error}</p>;
 
   return (
-    <div>
-      <h1>Admin - Books</h1>
+    <div className="container py-4">
+      <div className="d-flex flex-wrap gap-2 align-items-center justify-content-between mb-3">
+        <h1 className="m-0" style={{ color: '#000', fontWeight: 700 }}>
+          Admin — Books
+        </h1>
 
-      {!showForm && (
-        <button
-          className="btn btn-success mb-3"
-          onClick={() => setShowForm(true)}
-        >
-          Add Book
-        </button>
-      )}
+        {!showForm && (
+          <button
+            className="btn btn-dark btn-sm"
+            onClick={() => setShowForm(true)}
+          >
+            + Add Book
+          </button>
+        )}
+      </div>
 
       {showForm && (
         <NewBookForm
@@ -129,37 +133,35 @@ const AdminBooksPage = () => {
         </tbody>
       </table>
 
-      <div>
-        <button
-          className="btn btn-secondary btn-sm me-2"
-          disabled={pageNum === 1}
-          onClick={() => setPageNum(pageNum - 1)}
-        >
-          Previous
-        </button>
-        <span>
-          Page {pageNum} of {totalPages}
-        </span>
-        <button
-          className="btn btn-secondary btn-sm ms-2"
-          disabled={pageNum === totalPages}
-          onClick={() => setPageNum(pageNum + 1)}
-        >
-          Next
-        </button>
-        <select
-          className="ms-3"
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
-            setPageNum(1);
-          }}
-        >
-          <option value="5">5 per page</option>
-          <option value="10">10 per page</option>
-          <option value="20">20 per page</option>
-        </select>
-      </div>
+      {totalPages > 1 && (
+        <nav className="mt-4 d-flex justify-content-center align-items-center gap-3">
+          <ul className="pagination mb-0">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+              <li key={p} className={`page-item ${p === pageNum ? 'active' : ''}`}>
+                <button
+                  type="button"
+                  className="page-link"
+                  onClick={() => setPageNum(p)}
+                >
+                  {p}
+                </button>
+              </li>
+            ))}
+          </ul>
+          <select
+            className="form-select form-select-sm w-auto"
+            value={pageSize}
+            onChange={(e) => {
+              setPageSize(Number(e.target.value));
+              setPageNum(1);
+            }}
+          >
+            <option value="5">5 per page</option>
+            <option value="10">10 per page</option>
+            <option value="20">20 per page</option>
+          </select>
+        </nav>
+      )}
     </div>
   );
 };

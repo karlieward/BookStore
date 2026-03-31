@@ -1,5 +1,5 @@
 /** Main books page: category filters + pagination + cart summary. */
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import BookList from '../components/BookList';
 import CategoryFilter from '../components/CategoryFilter';
@@ -53,6 +53,8 @@ export default function BooksPage() {
     });
   };
 
+  const [totalPages, setTotalPages] = useState(0);
+
   const selectedLabel = useMemo(() => {
     if (selectedCategories.length === 0) return 'All categories';
     if (selectedCategories.length === 1) return selectedCategories[0];
@@ -88,9 +90,29 @@ export default function BooksPage() {
             setPageNum={setPageNum}
             setPageSize={setPageSize}
             setSortOrder={setSortOrder}
+            onTotalPagesChange={setTotalPages}
           />
         </main>
       </div>
+
+      {/* Pagination sits outside the sidebar/content row so it centers across the full page */}
+      {totalPages > 1 && (
+        <nav className="mt-4 d-flex justify-content-center">
+          <ul className="pagination mb-0">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+              <li key={p} className={`page-item ${p === pageNum ? 'active' : ''}`}>
+                <button
+                  type="button"
+                  className="page-link"
+                  onClick={() => setPageNum(p)}
+                >
+                  {p}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
     </div>
   );
 }

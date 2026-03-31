@@ -20,6 +20,7 @@ type Props = {
   setPageNum: (p: number) => void;
   setPageSize: (s: number) => void;
   setSortOrder: (s: 'asc' | 'desc') => void;
+  onTotalPagesChange?: (total: number) => void;
 };
 
 function BookList({
@@ -30,6 +31,7 @@ function BookList({
   setPageNum,
   setPageSize,
   setSortOrder,
+  onTotalPagesChange,
 }: Props) {
   const [books, setBooks] = useState<Book[]>([]);
   const [totalPages, setTotalPages] = useState(0);
@@ -56,8 +58,10 @@ function BookList({
           cache: 'no-store', // Prevent cached responses when changing sort
         });
         const data: BooksResponse = await res.json();
+        const pages = Math.ceil(data.totalNumBooks / pageSize);
         setBooks(data.books);
-        setTotalPages(Math.ceil(data.totalNumBooks / pageSize));
+        setTotalPages(pages);
+        onTotalPagesChange?.(pages);
       } catch (err) {
         console.error('Failed to fetch books:', err);
       } finally {
@@ -179,27 +183,6 @@ function BookList({
         ))}
       </div>
 
-      {/* Dynamic pagination: one button per page */}
-      {totalPages > 1 && (
-        <nav className="mt-4 d-flex justify-content-center">
-          <ul className="pagination mb-0">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-              <li
-                key={p}
-                className={`page-item ${p === pageNum ? 'active' : ''}`}
-              >
-                <button
-                  type="button"
-                  className="page-link"
-                  onClick={() => setPageNum(p)}
-                >
-                  {p}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      )}
     </div>
   );
 }
