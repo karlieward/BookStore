@@ -28,11 +28,11 @@ public class BooksController : ControllerBase
         [FromQuery] string? sortOrder = null,
         [FromQuery] List<string>? categories = null)
     {
-        // Fallback to query string in case model binding misses it
+        // Default to ascending title order if no sort is sent.
         sortOrder ??= Request.Query["sortOrder"].FirstOrDefault() ?? "asc";
         var isDesc = string.Equals(sortOrder, "desc", StringComparison.OrdinalIgnoreCase);
 
-        // Mission 12: build the query dynamically so filtering + paging works together.
+        // Start with all books, then add filters if the user selected any.
         IQueryable<Book> query = _context.Books.AsQueryable();
 
         if (categories is { Count: > 0 })
@@ -40,13 +40,13 @@ public class BooksController : ControllerBase
             query = query.Where(b => categories.Contains(b.Category));
         }
 
-        // Mission 12 (Crucial): total must be calculated AFTER filters are applied
-        // so the frontend page button count adjusts based on selected categories.
+        // Count after filtering so pagination matches the filtered result set.
         var totalNumBooks = query.Count();
 
-        // OrderBy/OrderByDescending must run before Skip/Take for correct pagination
+        // Sort before paging so each page stays in the right order.
         var ordered = isDesc ? query.OrderByDescending(b => b.Title) : query.OrderBy(b => b.Title);
 
+        // Return only the rows needed for the current page.
         var books = ordered
             .Skip((pageNum - 1) * pageSize)
             .Take(pageSize)
@@ -61,7 +61,7 @@ public class BooksController : ControllerBase
     [HttpGet("categories")]
     public IActionResult GetCategories()
     {
-        // Mission 12: distinct categories for the filter UI.
+        // Send each category once so the filter list has no duplicates.
         var categories = _context.Books
             .Select(x => x.Category)
             .Distinct()

@@ -8,7 +8,9 @@ interface FetchBooksResponse {
 // Base URL for your deployed backend (Azure Web App).
 // Keeping this in one place avoids mismatches between different components.
 export const API_BASE_URL =
+  // Use the Azure build-time variable when it exists.
   import.meta.env.VITE_API_BASE_URL?.trim() ||
+  // Fall back to the current deployed backend URL.
   'https://bookstore-ward-backend-gwhxb9ebebd2gqau.westus2-01.azurewebsites.net';
 
 const API_URL = `${API_BASE_URL}/api/Books`;
@@ -19,10 +21,12 @@ export const fetchBooks = async (
   selectedCategories: string[]
 ): Promise<FetchBooksResponse> => {
   try {
+    // Turn the selected categories into repeated query string values.
     const categoryParams = selectedCategories
       .map((cat) => `categories=${encodeURIComponent(cat)}`)
       .join('&');
 
+    // Request one page of books from the backend.
     const response = await fetch(
       `${API_URL}?pageSize=${pageSize}&pageNum=${pageNum}${selectedCategories.length ? `&${categoryParams}` : ''}`
     );
