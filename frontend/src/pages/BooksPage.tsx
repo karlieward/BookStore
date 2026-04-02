@@ -87,7 +87,6 @@ export default function BooksPage() {
             pageNum={pageNum}
             pageSize={pageSize}
             sortOrder={sortOrder}
-            setPageNum={setPageNum}
             setPageSize={setPageSize}
             setSortOrder={setSortOrder}
             onTotalPagesChange={setTotalPages}

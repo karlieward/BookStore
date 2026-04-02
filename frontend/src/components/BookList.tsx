@@ -17,7 +17,6 @@ type Props = {
   pageNum: number;
   pageSize: number;
   sortOrder: 'asc' | 'desc';
-  setPageNum: (p: number) => void;
   setPageSize: (s: number) => void;
   setSortOrder: (s: 'asc' | 'desc') => void;
   onTotalPagesChange?: (total: number) => void;
@@ -28,13 +27,11 @@ function BookList({
   pageNum,
   pageSize,
   sortOrder,
-  setPageNum,
   setPageSize,
   setSortOrder,
   onTotalPagesChange,
 }: Props) {
   const [books, setBooks] = useState<Book[]>([]);
-  const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const { addToCart } = useCart();
@@ -60,7 +57,6 @@ function BookList({
         const data: BooksResponse = await res.json();
         const pages = Math.ceil(data.totalNumBooks / pageSize);
         setBooks(data.books);
-        setTotalPages(pages);
         onTotalPagesChange?.(pages);
       } catch (err) {
         console.error('Failed to fetch books:', err);
