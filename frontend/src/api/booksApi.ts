@@ -8,6 +8,7 @@ interface FetchBooksResponse {
 // Base URL for your deployed backend (Azure Web App).
 // Keeping this in one place avoids mismatches between different components.
 export const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL?.trim() ||
   'https://bookstore-ward-backend-gwhxb9ebebd2gqau.westus2-01.azurewebsites.net';
 
 const API_URL = `${API_BASE_URL}/api/Books`;

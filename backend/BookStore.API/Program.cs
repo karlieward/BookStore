@@ -1,12 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using BookStore.API.Data;
+using Microsoft.Data.Sqlite;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var connectionString = builder.Configuration.GetConnectionString("BookstoreConnection")
+    ?? throw new InvalidOperationException("Connection string 'BookstoreConnection' was not found.");
+
+var resolvedConnectionString = ResolveSqliteConnectionString(connectionString);
 
 // Add services to the container.
 // DbContext uses BookstoreConnection from appsettings.json
 builder.Services.AddDbContext<BookStoreContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("BookstoreConnection")));
+    options.UseSqlite(resolvedConnectionString));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -38,3 +44,34 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+static string ResolveSqliteConnectionString(string connectionString)
+{
+    var builder = new SqliteConnectionStringBuilder(connectionString);
+    var dataSource = builder.DataSource;
+
+    if (string.IsNullOrWhiteSpace(dataSource) || Path.IsPathRooted(dataSource))
+    {
+        return connectionString;
+    }
+
+    var contentRoot = AppContext.BaseDirectory;
+    var packagedDbPath = Path.Combine(contentRoot, dataSource);
+
+    var azureHome = Environment.GetEnvironmentVariable("HOME");
+    var writableRoot = string.IsNullOrWhiteSpace(azureHome)
+        ? contentRoot
+        : Path.Combine(azureHome, "data");
+
+    Directory.CreateDirectory(writableRoot);
+
+    var writableDbPath = Path.Combine(writableRoot, Path.GetFileName(dataSource));
+
+    if (!File.Exists(writableDbPath) && File.Exists(packagedDbPath))
+    {
+        File.Copy(packagedDbPath, writableDbPath);
+    }
+
+    builder.DataSource = writableDbPath;
+    return builder.ToString();
+}
