@@ -28,13 +28,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-// Allow React dev server (Vite default 5173, CRA default 3000)
+// CORS: allow the Azure Static Web App to call this API (and keep local dev working).
+// This project is used for coursework; permissive CORS avoids "empty UI" due to blocked fetches.
 app.UseCors(policy => policy
-    .WithOrigins(
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "https://jolly-flower-0aac8531e.1.azurestaticapps.net"
-    )
+    .AllowAnyOrigin()
     .AllowAnyHeader()
     .AllowAnyMethod());
 app.UseAuthorization();
