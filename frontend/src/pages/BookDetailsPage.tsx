@@ -3,8 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import type { Book } from '../types/Book';
 import { useCart } from '../state/CartContext';
-
-const API_BASE = import.meta.env.VITE_API_URL || '';
+import { API_BASE_URL } from '../api/booksApi';
 
 export default function BookDetailsPage() {
   const { bookId } = useParams();
@@ -18,8 +17,10 @@ export default function BookDetailsPage() {
       if (!bookId) return;
       try {
         setLoading(true);
-        const base = API_BASE || '';
-        const res = await fetch(`${base}/api/Books/${bookId}`, { cache: 'no-store' });
+        const res = await fetch(
+          `${API_BASE_URL}/api/Books/${bookId}`,
+          { cache: 'no-store' }
+        );
         if (!res.ok) throw new Error(`Failed to load book ${bookId}`);
         const data: Book = await res.json();
         setBook(data);

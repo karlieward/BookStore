@@ -3,8 +3,7 @@ import { useState, useEffect } from 'react';
 import type { Book } from '../types/Book';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../state/CartContext';
-
-const API_BASE = import.meta.env.VITE_API_URL || '';
+import { API_BASE_URL } from '../api/booksApi';
 
 /** API response shape from /Books endpoint */
 interface BooksResponse {
@@ -42,7 +41,6 @@ function BookList({
     const fetchBooks = async () => {
       try {
         setLoading(true);
-        const base = API_BASE || '';
         const params = new URLSearchParams({
           pageNum: String(pageNum),
           pageSize: String(pageSize),
@@ -51,7 +49,7 @@ function BookList({
 
         selectedCategories.forEach((c) => params.append('categories', c));
 
-        const res = await fetch(`${base}/api/Books?${params}`, {
+        const res = await fetch(`${API_BASE_URL}/api/Books?${params}`, {
           cache: 'no-store', // Prevent cached responses when changing sort
         });
         const data: BooksResponse = await res.json();

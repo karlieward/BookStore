@@ -1,8 +1,7 @@
 /** Sidebar filter component: fetches distinct categories and lets the user select them. */
 import { useEffect, useMemo, useState } from 'react';
 import { Tooltip } from 'bootstrap';
-
-const API_BASE = import.meta.env.VITE_API_URL || '';
+import { API_BASE_URL } from '../api/booksApi';
 
 type Props = {
   selectedCategories: string[];
@@ -17,8 +16,7 @@ export default function CategoryFilter({ selectedCategories, setSelectedCategori
     const fetchCategories = async () => {
       try {
         setLoading(true);
-        const base = API_BASE || '';
-        const res = await fetch(`${base}/api/Books/categories`, { cache: 'no-store' });
+        const res = await fetch(`${API_BASE_URL}/api/Books/categories`, { cache: 'no-store' });
         const data: string[] = await res.json();
         setCategories(data);
       } catch (err) {

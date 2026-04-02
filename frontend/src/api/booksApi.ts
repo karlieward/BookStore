@@ -5,7 +5,12 @@ interface FetchBooksResponse {
   totalNumBooks: number;
 }
 
-const API_URL = 'https://bookstore-ward-backend-gwhxb9ebebd2gqau.westus2-01.azurewebsites.net/api/Books';
+// Base URL for your deployed backend (Azure Web App).
+// Keeping this in one place avoids mismatches between different components.
+export const API_BASE_URL =
+  'https://bookstore-ward-backend-gwhxb9ebebd2gqau.westus2-01.azurewebsites.net';
+
+const API_URL = `${API_BASE_URL}/api/Books`;
 
 export const fetchBooks = async (
   pageSize: number,
