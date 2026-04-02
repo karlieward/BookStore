@@ -30,7 +30,11 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 // Allow React dev server (Vite default 5173, CRA default 3000)
 app.UseCors(policy => policy
-    .WithOrigins("http://localhost:3000", "http://localhost:5173")
+    .WithOrigins(
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "https://jolly-flower-0aac8531e.1.azurestaticapps.net"
+    )
     .AllowAnyHeader()
     .AllowAnyMethod());
 app.UseAuthorization();
