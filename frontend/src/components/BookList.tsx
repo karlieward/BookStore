@@ -5,6 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../state/CartContext';
 import { API_BASE_URL } from '../api/booksApi';
 
+// Catalog fetch uses the same deployed backend base as `booksApi` (Azure + CORS).
+
 /** API response shape from /Books endpoint */
 interface BooksResponse {
   books: Book[];

@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { Tooltip } from 'bootstrap';
 import { API_BASE_URL } from '../api/booksApi';
 
+// Categories load from the deployed API so the sidebar works on Azure Static Web Apps.
+
 type Props = {
   selectedCategories: string[];
   setSelectedCategories: (updater: (prev: string[]) => string[]) => void;

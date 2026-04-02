@@ -1,3 +1,7 @@
+/**
+ * Form to update an existing book via `updateBook` → PUT `/api/Books/UpdateBook/{id}`.
+ * Local state starts as a copy of the row selected on the admin table.
+ */
 import { useState } from 'react';
 import type { Book } from '../types/Book';
 import { updateBook } from '../api/booksApi';

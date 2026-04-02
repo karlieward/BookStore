@@ -19,6 +19,7 @@ function App() {
             Bookstore
           </Link>
           <div className="ms-auto d-flex gap-2">
+            {/* Link to admin CRUD page; deep links need `public/routes.json` on Azure Static Web Apps. */}
             <Link className="btn btn-outline-light btn-sm" to="/adminbooks">
               Admin
             </Link>
@@ -33,6 +34,7 @@ function App() {
         <Route path="/" element={<BooksPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/details/:bookId" element={<BookDetailsPage />} />
+        {/* Admin route for add / edit / delete books */}
         <Route path="/adminbooks" element={<AdminBooksPage />} />
       </Routes>
     </BrowserRouter>

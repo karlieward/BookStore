@@ -17,6 +17,7 @@ export default function BookDetailsPage() {
       if (!bookId) return;
       try {
         setLoading(true);
+        // Single-book GET uses the same backend base URL as the rest of the app.
         const res = await fetch(
           `${API_BASE_URL}/api/Books/${bookId}`,
           { cache: 'no-store' }

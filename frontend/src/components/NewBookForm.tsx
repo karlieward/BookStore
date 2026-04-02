@@ -1,3 +1,7 @@
+/**
+ * Form to insert a new book via `addBook` → POST `/api/Books/AddBook`.
+ * `bookId` stays 0; the database assigns the real id when the row is saved.
+ */
 import { useState } from 'react';
 import type { Book } from '../types/Book';
 import { addBook } from '../api/booksApi';

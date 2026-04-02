@@ -5,7 +5,7 @@ using BookStore.API.Data;
 namespace BookStore.API.Controllers;
 
 /// <summary>
-/// Books API: paginated book listing, category filter support, and category lookup.
+/// Books API: paginated listing, categories, single-book lookup, and admin CRUD endpoints.
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
@@ -78,6 +78,9 @@ public class BooksController : ControllerBase
         return book is null ? NotFound() : Ok(book);
     }
 
+    /// <summary>
+    /// Inserts a new book row (POST body matches the Book entity).
+    /// </summary>
     [HttpPost("AddBook")]
     public IActionResult AddBook([FromBody] Book newBook)
     {
@@ -86,6 +89,9 @@ public class BooksController : ControllerBase
         return Ok(newBook);
     }
 
+    /// <summary>
+    /// Updates fields for an existing book by id.
+    /// </summary>
     [HttpPut("UpdateBook/{bookId}")]
     public IActionResult UpdateBook(int bookId, [FromBody] Book updatedBook)
     {
@@ -106,6 +112,9 @@ public class BooksController : ControllerBase
         return Ok(existingBook);
     }
 
+    /// <summary>
+    /// Deletes a book by id; returns 204 on success.
+    /// </summary>
     [HttpDelete("DeleteBook/{bookId}")]
     public IActionResult DeleteBook(int bookId)
     {

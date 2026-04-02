@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <!-- Ship the seeded SQLite file with publish output so Azure has data on first deploy. -->
   <ItemGroup>
     <None Update="Bookstore.sqlite">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

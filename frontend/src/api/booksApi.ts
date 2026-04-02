@@ -1,3 +1,9 @@
+/**
+ * HTTP helpers for the Books API (list + admin CRUD).
+ * `API_BASE_URL` is shared by this module and by components that call `/api/Books` directly
+ * (catalog list, categories sidebar, book details) so the deployed Azure frontend always
+ * targets the same backend as the admin forms below.
+ */
 import type { Book } from '../types/Book';
 
 interface FetchBooksResponse {
@@ -5,12 +11,9 @@ interface FetchBooksResponse {
   totalNumBooks: number;
 }
 
-// Base URL for your deployed backend (Azure Web App).
-// Keeping this in one place avoids mismatches between different components.
+// Deployed backend (Azure App Service). Override at build time with VITE_API_BASE_URL if needed.
 export const API_BASE_URL =
-  // Use the Azure build-time variable when it exists.
   import.meta.env.VITE_API_BASE_URL?.trim() ||
-  // Fall back to the current deployed backend URL.
   'https://bookstore-ward-backend-gwhxb9ebebd2gqau.westus2-01.azurewebsites.net';
 
 const API_URL = `${API_BASE_URL}/api/Books`;
@@ -42,6 +45,7 @@ export const fetchBooks = async (
   }
 };
 
+// POST matches `BooksController.AddBook`.
 export const addBook = async (newBook: Book): Promise<Book> => {
   try {
     const response = await fetch(`${API_URL}/AddBook`, {
@@ -63,6 +67,7 @@ export const addBook = async (newBook: Book): Promise<Book> => {
   }
 };
 
+// PUT matches `BooksController.UpdateBook`.
 export const updateBook = async (
   bookId: number,
   updatedBook: Book
@@ -83,6 +88,7 @@ export const updateBook = async (
   }
 };
 
+// DELETE matches `BooksController.DeleteBook`.
 export const deleteBook = async (bookId: number): Promise<void> => {
   try {
     const response = await fetch(`${API_URL}/DeleteBook/${bookId}`, {

@@ -1,3 +1,7 @@
+/**
+ * Admin CRUD page — list books, add (`NewBookForm`), edit (`EditBookForm`), delete.
+ * Route: `/adminbooks` (see `App.tsx`). Uses `booksApi` for all server calls.
+ */
 import { useEffect, useState } from 'react';
 import type { Book } from '../types/Book';
 import { deleteBook, fetchBooks } from '../api/booksApi';
@@ -14,6 +18,7 @@ const AdminBooksPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingBook, setEditingBook] = useState<Book | null>(null);
 
+  // Load the current page of books whenever page size or page number changes.
   useEffect(() => {
     const loadBooks = async () => {
       try {
@@ -37,6 +42,7 @@ const AdminBooksPage = () => {
     if (!confirmDelete) return;
 
     try {
+      // Remove row in the database, then drop it from local state.
       await deleteBook(bookId);
       setBooks(books.filter((b) => b.bookId !== bookId));
     } catch (error) {

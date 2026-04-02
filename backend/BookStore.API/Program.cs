@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("BookstoreConnection")
     ?? throw new InvalidOperationException("Connection string 'BookstoreConnection' was not found.");
 
-// Resolve the SQLite file to a location that also works after Azure deployment.
+// Azure: SQLite must live in a writable folder on App Service; copy seeded DB from publish output.
 var resolvedConnectionString = ResolveSqliteConnectionString(connectionString);
 
 // Add services to the container.
@@ -24,7 +24,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<BookStoreContext>();
-    // Create the database file/tables the first time the app starts.
+    // Ensure schema exists on first run (helps fresh Azure deploys).
     db.Database.EnsureCreated();
 }
 
@@ -36,7 +36,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-// Allow the frontend site to call this API from a different domain.
+// CORS so the Azure Static Web App (and local Vite) can call this API from the browser.
 app.UseCors(policy => policy
     .AllowAnyOrigin()
     .AllowAnyHeader()
@@ -46,6 +46,7 @@ app.MapControllers();
 
 app.Run();
 
+// Map relative `Bookstore.sqlite` to a writable path under HOME/data on Azure, seeding from the published file once.
 static string ResolveSqliteConnectionString(string connectionString)
 {
     var builder = new SqliteConnectionStringBuilder(connectionString);

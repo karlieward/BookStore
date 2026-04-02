@@ -1,3 +1,4 @@
+# Deploy the React frontend to Azure Static Web Apps from the `mission13` branch.
 name: Azure Static Web Apps CI/CD
 
 on:
